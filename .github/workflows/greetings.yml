@@ -10,18 +10,11 @@ jobs:
     - name: Check for specific label
       id: check-label
       run: |
-        LABEL=${{ github.event.pull_request.labels.name }}
-        LABEL_DATE=${{ github.event.pull_request.labels.updated_at }}
-        CURRENT_DATE=$(date +%s)
-        DIFFERENCE=$(( (CURRENT_DATE - LABEL_DATE) / 86400 ))
-        if [ $LABEL == "Status: Code Review" ] && [ $DIFFERENCE -ge 2 ]; then
-          echo "Label is Code Review, but not changed for 48 hours, Changing label to reviewed"
-          # Add code to change the label here
-          PULL_REQUEST_NUMBER=${{ github.event.number }}
-          REPO_OWNER=${{ github.repository_owner }}
-          REPO_NAME=${{ github.repository }}
-          GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
+        echo "Label is Code Review, but not changed for 48 hours, Changing label to reviewed"
+        # Add code to change the label here
+        PULL_REQUEST_NUMBER=${{ github.event.number }}
+        REPO_OWNER=${{ github.repository_owner }}
+        REPO_NAME=${{ github.repository }}
+        GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
 
-          curl -X POST -H "Authorization: token ${GITHUB_TOKEN}" "https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/issues/${PULL_REQUEST_NUMBER}/labels" --data "{\"labels\":[\"waiting\"]}"
-        else
-          echo "Label is changed within 48 hours or not review, nothing to do"
+        curl -X POST -H "Authorization: token ${GITHUB_TOKEN}" "https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/issues/${PULL_REQUEST_NUMBER}/labels" --data "{\"labels\":[\"waiting\"]}"
