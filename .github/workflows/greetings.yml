@@ -1,8 +1,7 @@
 name: Label Check
 on:
   schedule:
-    #runs every 48 hours
-    - cron: '1 * * * *'
+    - cron: '*/1 * * * *'
 jobs:
   check-label:
     runs-on: ubuntu-latest
