@@ -1,7 +1,7 @@
 name: Label Check
 on:
   schedule:
-    - cron: '*/1 * * * *'
+    - cron: '* * * * *'
 jobs:
   check-label:
     runs-on: ubuntu-latest
