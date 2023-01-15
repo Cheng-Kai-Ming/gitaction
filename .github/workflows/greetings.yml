@@ -10,7 +10,5 @@ jobs:
   Explore-GitHub-Actions:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-
       - name: hi
         run: echo Hello, world!
