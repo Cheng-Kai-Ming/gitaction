@@ -1,14 +1,15 @@
 name: GitHub Actions Demo
 on: 
   push:
-    branches:
-      - "main"
+    branches: [ "main" ] 
   pull_request:
-    branches: ["main"]
+    branches: [ "main" ]
 
 jobs:
-  Explore-GitHub-Actions:
+  build:
     runs-on: ubuntu-latest
     steps:
+      -uses: action/checkout@v2
+      
       - name: hi
         run: echo Hello, world!
