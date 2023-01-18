@@ -13,3 +13,9 @@ jobs:
       run: |
         echo "Code review label detected, starting review process"
         # Add steps to perform code review here
+    - name: Check for another label
+      if: github.event.label.name != 'code review'
+      run: |
+        echo "Another label added: ${{github.event.label.name}}"
+        # Add steps to handle the additional label here
+        
