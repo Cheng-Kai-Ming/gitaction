@@ -11,8 +11,8 @@ jobs:
     - name: Check label
       if: github.event.label.name == 'code review'
       run: |
-        LABEL_DATE=${{ github.event.pull_request.labels.updated_at }}
-        echo "My name is $LABEL_DATE"
+        timeout 1m
+        echo "this is label${{github.event.label.name}}"
     - name: Check for another label
       if: github.event.label.name != 'code review'
       run: |
