@@ -9,9 +9,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Install jq
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y jq
+      uses: actions/setup-node@v2
+      with:
+        node-version: 14
+        package-manager: apt
+        packages: jq
     - name: Check code review label
       run: |
         echo "Checking code review label"
