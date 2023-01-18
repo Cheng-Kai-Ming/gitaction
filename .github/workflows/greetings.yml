@@ -9,17 +9,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Check label
-      if: github.event.label.name == 'code review'
-      run: |
-        sleep 60
-        if github.event.label.name == 'code review'; then
-          PULL_REQUEST_NUMBER=${{ github.event.number }}
-          REPO_OWNER=${{ github.repository_owner }}
-          REPO_NAME=${{ github.repository }}
-          GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
-          curl -X POST -H "Authorization: token ${GITHUB_TOKEN}" "https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/issues/${PULL_REQUEST_NUMBER}/labels" --data "{\"labels\":[\"waiting\"]}"
-    - name: Check for another label
-      if: github.event.label.name != 'code review'
       run: |
         echo "Another label added: ${{github.event.label.name}}"
-        # Add steps to handle the additional label here
