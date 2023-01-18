@@ -11,7 +11,7 @@ jobs:
     - name: Check label
       if: github.event.label.name == 'code review'
       run: |
-        timeout 1m
+        sleep 60
         echo "this is label${{github.event.label.name}}"
     - name: Check for another label
       if: github.event.label.name != 'code review'
