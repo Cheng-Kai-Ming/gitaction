@@ -1,38 +1,32 @@
 name: Code Review Action
 
 on:
-  schedule:
-    - cron: "*/1 * * * *" # runs every 12 hours
+  pull_request:
+    types: [labeled]
 
 jobs:
   code_review:
     runs-on: ubuntu-latest
     steps:
-    - name: Install jq
-      uses: actions/setup-node@v2
-      with:
-        node-version: 14
-        package-manager: apt
-        packages: jq
-    - name: Check code review label
+    - name: 
+    - name: Check label
+      if: github.event.label.name == 'code review'
       run: |
-        echo "Checking code review label"
-        LABEL='code review'
-        LABEL_EXISTS=$(curl -sSL -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -X GET https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.number }}/labels | jq 'map(select(.name=="'$LABEL'")) | length')
-        if [ $LABEL_EXISTS -gt 0 ]; then
-          echo "Code review label found"
-          LABEL_UPDATED_AT=$(curl -sSL -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -X GET https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.number }}/labels | jq 'map(select(.name=="'$LABEL'")) | .[0].updated_at')
-          echo "Label last updated at: $LABEL_UPDATED_AT"
-          CURRENT_TIME=$(date +%s)
-          echo "Current time: $CURRENT_TIME"
-          if (( CURRENT_TIME - $(date -d $LABEL_UPDATED_AT +%s) > 172800 )); then # check if last update was more than 48 hours ago
-            echo "Code review label has not been updated for 48 hours, adding another label"
-            # Add steps to add another label here
-            curl -sSL -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -X POST -H "Content-Type: application/json" --data '{"name":"waiting for review"}' https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.number }}/labels
-          else
-            echo "Code review label has been updated recently"
-          fi
-        else
-          echo "Code review label not found"
-        fi
-        
+        echo "Code review label detected, starting review process"
+          LABEL_DATE=${{ github.event.pull_request.labels.updated_at }}
+          CURRENT_DATE=$(date +%s)
+          DIFFERENCE=$(( (CURRENT_DATE - LABEL_DATE) / 1 ))
+          if [ $DIFFERENCE -ge 2 ]; then
+            echo "Label is Code Review, but not changed for 48 hours, Changing label to reviewed"
+            # Add code to change the label here
+            PULL_REQUEST_NUMBER=${{ github.event.number }}
+            REPO_OWNER=${{ github.repository_owner }}
+            REPO_NAME=${{ github.repository }}
+            GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
+
+            curl -X POST -H "Authorization: token ${GITHUB_TOKEN}" "https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/issues/${PULL_REQUEST_NUMBER}/labels" --data "{\"labels\":[\"waiting\"]}"
+    - name: Check for another label
+      if: github.event.label.name != 'code review'
+      run: |
+        echo "Another label added: ${{github.event.label.name}}"
+        # Add steps to handle the additional label here
