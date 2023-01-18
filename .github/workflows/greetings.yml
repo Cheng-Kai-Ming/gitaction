@@ -1,14 +1,15 @@
-name: Label Check
+name: Code Review Action
+
 on:
-  pull_request_review:
+  pull_request:
     types: [labeled]
 
 jobs:
-  notify:
+  code_review:
     runs-on: ubuntu-latest
     steps:
     - name: Check label
-      if: ${{ contains(github.event.label.name, 'code review') }}
+      if: github.event.label.name == 'code review'
       run: |
-        echo "Code review label added"
-        # send notification or update status
+        echo "Code review label detected, starting review process"
+        # Add steps to perform code review here
