@@ -2,12 +2,17 @@ name: Code Review Action
 
 on:
   schedule:
-    - cron: "*/1 * * * *" # runs every 12 hours
+    - cron: "0 */12 * * *" # runs every 12 hours
 
 jobs:
   code_review:
     runs-on: ubuntu-latest
     steps:
+    - name: Install jq
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y jq
+
     - name: Check code review label
       run: |
         echo "Checking code review label"
@@ -29,3 +34,4 @@ jobs:
         else
           echo "Code review label not found"
         fi
+        
