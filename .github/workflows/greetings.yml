@@ -11,7 +11,6 @@ jobs:
     - name: Check label
       if: github.event.label.name == 'code review'
       run: |
-        echo "Code review label detected, starting review process"
         LABEL_DATE=${{ github.event.pull_request.labels.updated_at }}
         CURRENT_DATE=$(date +%s)
         DIFFERENCE=$(( (CURRENT_DATE - LABEL_DATE) / 1 ))
