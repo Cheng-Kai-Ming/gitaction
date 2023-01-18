@@ -12,15 +12,6 @@ jobs:
       if: github.event.label.name == 'code review'
       run: |
         LABEL_DATE=${{ github.event.pull_request.labels.updated_at }}
-        CURRENT_DATE=$(date +%s)
-        DIFFERENCE=$(( (CURRENT_DATE - LABEL_DATE) / 1 ))
-        if [ $DIFFERENCE -ge 2 ]; then
-          PULL_REQUEST_NUMBER=${{ github.event.number }}
-          REPO_OWNER=${{ github.repository_owner }}
-          REPO_NAME=${{ github.repository }}
-          GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
-
-          curl -X POST -H "Authorization: token ${GITHUB_TOKEN}" "https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/issues/${PULL_REQUEST_NUMBER}/labels" --data "{\"labels\":[\"waiting\"]}"
     - name: Check for another label
       if: github.event.label.name != 'code review'
       run: |
