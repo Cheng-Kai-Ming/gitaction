@@ -1,19 +1,13 @@
-name: Label Check
-on:
-  schedule:
-    - cron: '* * * * *'
+ on:
+  pull_request_review:
+    types: [labeled]
+
 jobs:
-  check-label:
+  notify:
     runs-on: ubuntu-latest
     steps:
-    - name: Check for specific label
-      id: check-label
+    - name: Check label
+      if: ${{ contains(github.event.label.name, 'code review') }}
       run: |
-        echo "Label is Code Review, but not changed for 48 hours, Changing label to reviewed"
-        # Add code to change the label here
-        PULL_REQUEST_NUMBER=${{ github.event.number }}
-        REPO_OWNER=${{ github.repository_owner }}
-        REPO_NAME=${{ github.repository }}
-        GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
-
-        curl -X POST -H "Authorization: token ${GITHUB_TOKEN}" "https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/issues/${PULL_REQUEST_NUMBER}/labels" --data "{\"labels\":[\"waiting\"]}"
+        echo "Code review label added"
+        # send notification or update status
